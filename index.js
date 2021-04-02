@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser')
+ObjectID = require('mongodb').ObjectID
 const cors = require('cors')
 require('dotenv').config()
 const port = process.env.PORT || 5055;
@@ -51,6 +52,15 @@ client.connect(err => {
 
     })
 
+    app.get('/products/:id',(req,res) => {
+      const id = ObjectID(req.params.id);
+      productsCollection.find({_id:id})
+      .toArray((err,items) => {
+        console.log(items)
+        res.send(items)
+      })
+    })
+
 
   });
 
@@ -59,6 +69,4 @@ client.connect(err => {
 
 
 
-  app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-  })
+  app.listen(process.env.PORT || port)
